@@ -57,7 +57,9 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/lexi.c 206687 2010-04-15 21:41:07Z avg $
 #include "indent.h"
 
 #define alphanum 1
+#ifdef undef
 #define opchar 3
+#endif
 
 struct templ {
     const char *rwd;

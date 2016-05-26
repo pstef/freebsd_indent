@@ -3,6 +3,7 @@
 
 PROG=	indent
 SRCS=	indent.c io.c lexi.c parse.c pr_comment.c args.c
+CFLAGS=	-D__FBSDID="static char *rcsid="
 
 NO_WMISSING_VARIABLE_DECLARATIONS=
 

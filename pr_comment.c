@@ -302,6 +302,19 @@ pr_comment(void)
 			    goto end_of_comment;
 		    }
 		} while (*buf_ptr == ' ' || *buf_ptr == '\t');
+
+		/*
+		 * If there is a blank comment line, we need to prefix
+		 * the line with the same three spaces that "/* " takes up.
+		 * Without this code, blank stared lines in comments have
+		 * three too-many characters on the line when wrapped.
+		 */
+		if (s_com == e_com) {
+		    *e_com++ = ' ';	/* add blanks for continuation */
+		    *e_com++ = ' ';
+		    *e_com++ = ' ';
+		    now_col += 3;
+		}
 	    }
 	    else if (++buf_ptr >= buf_end)
 		fill_buffer();

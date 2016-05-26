@@ -498,6 +498,13 @@ check_type:
 	case newline:
 	    if (ps.last_token != comma || ps.p_l_follow > 0
 		    || !ps.leave_comma || ps.block_init || !break_comma || s_com != e_com) {
+		/* don't newline on cpp lines like #endif */
+		if (buf_ptr[0] == '#')
+		{
+			ps.just_saw_decl = 0;
+			prefix_blankline_requested = 0;
+			postfix_blankline_requested = 0;
+		}
 		dump_line();
 		ps.want_blank = false;
 	    }

@@ -556,9 +556,7 @@ check_type:
 	    if (ps.cast_mask & (1 << ps.p_l_follow) & ~ps.sizeof_mask) {
 		ps.last_u_d = true;
 		ps.cast_mask &= (1 << ps.p_l_follow) - 1;
-		ps.want_blank = false;
-	    } else
-		ps.want_blank = true;
+	    }
 	    ps.sizeof_mask &= (1 << ps.p_l_follow) - 1;
 	    if (--ps.p_l_follow < 0) {
 		ps.p_l_follow = 0;
@@ -568,6 +566,7 @@ check_type:
 		ps.paren_level = ps.p_l_follow;	/* then indent it */
 
 	    *e_code++ = token[0];
+	    ps.want_blank = true;
 
 	    if (sp_sw && (ps.p_l_follow == 0)) {	/* check for end of if
 							 * (...), or some such */

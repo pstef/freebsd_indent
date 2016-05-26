@@ -215,7 +215,7 @@ struct fstate {
     char        font[4];
     char        size;
     int         allcaps:1;
-} __aligned(sizeof(int));
+};
 char       *chfont(struct fstate *, struct fstate *, char *);
 
 struct fstate

@@ -1,0 +1,294 @@
+INDENT(1)                 BSD General Commands Manual                INDENT(1)
+
+[1mNAME[0m
+     [1mindent [22m— indent and format C program source
+
+[1mSYNOPSIS[0m
+     [1mindent [22m[[4minput-file[24m [[4moutput-file[24m]] [[1m-bacc [22m| [1m-nbacc[22m] [[1m-bad [22m| [1m-nbad[22m]
+            [[1m-bap [22m| [1m-nbap[22m] [[1m-ei [22m| [1m-ei[22m] [[1m-eei [22m| [1m-eei[22m] [[1m-bbb [22m| [1m-nbbb[22m]
+            [[1m-bc [22m| [1m-nbc[22m] [[1m-bl[22m] [[1m-br[22m] [[1m-c[4m[22mn[24m] [[1m-cd[4m[22mn[24m] [[1m-cdb [22m| [1m-ncdb[22m] [[1m-ce [22m| [1m-nce[22m]
+            [[1m-ci[4m[22mn[24m] [[1m-cli[4m[22mn[24m] [[1m-d[4m[22mn[24m] [[1m-di[4m[22mn[24m] [[1m-fbs [22m| [1m-nfbs[22m] [[1m-fc1 [22m| [1m-nfc1[22m]
+            [[1m-fcb [22m| [1m-nfcb[22m] [[1m-i[4m[22mn[24m] [[1m-ip [22m| [1m-nip[22m] [[1m-l[4m[22mn[24m] [[1m-lc[4m[22mn[24m] [[1m-ldi[4m[22mn[24m]
+            [[1m-lp [22m| [1m-nlp[22m] [[1m-npro[22m] [[1m-pcs [22m| [1m-npcs[22m] [[1m-psl [22m| [1m-npsl[22m] [[1m-sc [22m| [1m-nsc[22m]
+            [[1m-sob [22m| [1m-nsob[22m] [[1m-st[22m] [[1m-ta[22m] [[1m-troff[22m] [[1m-ut [22m| [1m-nut[22m] [[1m-v [22m| [1m-nv[22m]
+
+[1mDESCRIPTION[0m
+     The [1mindent [22mutility is a [4mC[24m program formatter.  It reformats the [4mC[24m program
+     in the [4minput-file[24m according to the switches.  The switches which can be
+     specified are described below.  They may appear before or after the file
+     names.
+
+     [1mNOTE[22m: If you only specify an [4minput-file[24m, the formatting is done `in-
+     place', that is, the formatted file is written back into [4minput-file[24m and a
+     backup copy of [4minput-file[24m is written in the current directory.  If
+     [4minput-file[24m is named ‘[4m/blah/blah/file[24m’, the backup file is named
+     ‘[4mfile.BAK[24m’.
+
+     If [4moutput-file[24m is specified, [1mindent [22mchecks to make sure that it is dif‐
+     ferent from [4minput-file[24m.
+
+     The options listed below control the formatting style imposed by [1mindent[22m.
+
+     [1m-bacc[22m, [1m-nbacc   [22mIf [1m-bacc [22mis specified, a blank line is forced around
+                     every conditional compilation block.  For example, in
+                     front of every #ifdef and after every #endif.  Other
+                     blank lines surrounding such blocks will be swallowed.
+                     Default: [1m-nbacc[22m.
+
+     [1m-bad[22m, [1m-nbad     [22mIf [1m-bad [22mis specified, a blank line is forced after every
+                     block of declarations.  Default: [1m-nbad[22m.
+
+     [1m-bap[22m, [1m-nbap     [22mIf [1m-bap [22mis specified, a blank line is forced after every
+                     procedure body.  Default: [1m-nbap[22m.
+
+     [1m-bbb[22m, [1m-nbbb     [22mIf [1m-bbb [22mis specified, a blank line is forced before every
+                     block comment.  Default: [1m-nbbb[22m.
+
+     [1m-bc[22m, [1m-nbc       [22mIf [1m-bc [22mis specified, then a newline is forced after each
+                     comma in a declaration.  [1m-nbc [22mturns off this option.
+                     Default: [1m-nbc[22m.
+
+     [1m-br[22m, [1m-bl        [22mSpecifying [1m-bl [22mlines-up compound statements like this:
+
+                           if (...)
+                           {
+                             code
+                           }
+
+                     Specifying [1m-br [22m(the default) makes them look like this:
+
+                           if (...) {
+                             code
+                           }
+
+     [1m-c[4m[22mn[24m             The column in which comments on code start.  The default
+                     is 33.
+
+     [1m-cd[4m[22mn[24m            The column in which comments on declarations start.  The
+                     default is for these comments to start in the same column
+                     as those on code.
+
+     [1m-cdb[22m, [1m-ncdb     [22mEnables (disables) the placement of comment delimiters on
+                     blank lines.  With this option enabled, comments look
+                     like this:
+
+                                   /*
+                                    * this is a comment
+                                    */
+
+                     Rather than like this:
+
+                                   /* this is a comment */
+
+                     This only affects block comments, not comments to the
+                     right of code.  The default is [1m-cdb[22m.
+
+     [1m-ce[22m, [1m-nce       [22mEnables (disables) forcing of `else's to cuddle up to the
+                     immediately preceding `}'.  The default is [1m-ce[22m.
+
+     [1m-ci[4m[22mn[24m            Sets the continuation indent to be [4mn[24m.  Continuation lines
+                     will be indented that far from the beginning of the first
+                     line of the statement.  Parenthesized expressions have
+                     extra indentation added to indicate the nesting, unless
+                     [1m-lp [22mis in effect or the continuation indent is exactly
+                     half of the main indent.  [1m-ci [22mdefaults to the same value
+                     as [1m-i[22m.
+
+     [1m-cli[4m[22mn[24m           Causes case labels to be indented [4mn[24m tab stops to the
+                     right of the containing [1mswitch [22mstatement.  [1m-cli0.5 [22mcauses
+                     case labels to be indented half a tab stop.  The default
+                     is [1m-cli0[22m.
+
+     [1m-d[4m[22mn[24m             Controls the placement of comments which are not to the
+                     right of code.  For example, [1m-d1 [22mmeans that such comments
+                     are placed one indentation level to the left of code.
+                     Specifying the default [1m-d0 [22mlines-up these comments with
+                     the code.  See the section on comment indentation below.
+
+     [1m-di[4m[22mn[24m            Specifies the indentation, in character positions, of
+                     global variable names and all struct/union member names
+                     relative to the beginning of their type declaration.  The
+                     default is [1m-di16[22m.
+
+     [1m-dj[22m, [1m-ndj       -dj [22mleft justifies declarations.  [1m-ndj [22mindents declara‐
+                     tions the same as code.  The default is [1m-ndj[22m.
+
+     [1m-ei[22m, [1m-nei       [22mEnables (disables) special [1melse-if [22mprocessing.  If it is
+                     enabled, an [1mif [22mfollowing an [1melse [22mwill have the same
+                     indentation as the preceding [1mif [22mstatement.  The default
+                     is [1m-ei[22m.
+
+     [1m-eei[22m, [1m-neei     [22mEnables (disables) extra indentation on continuation
+                     lines of the expression part of [1mif [22mand [1mwhile [22mstatements.
+                     These continuation lines will be indented one extra
+                     level.  The default is [1m-neei[22m.
+
+     [1m-fbs[22m, [1m-nfbs     [22mEnables (disables) splitting the function declaration and
+                     opening brace across two lines.  The default is [1m-fbs[22m.
+
+     [1m-fc1[22m, [1m-nfc1     [22mEnables (disables) the formatting of comments that start
+                     in column 1.  Often, comments whose leading `/' is in
+                     column 1 have been carefully hand formatted by the pro‐
+                     grammer.  In such cases, [1m-nfc1 [22mshould be used.  The
+                     default is [1m-fc1[22m.
+
+     [1m-fcb[22m, [1m-nfcb     [22mEnables (disables) the formatting of block comments (ones
+                     that begin with `/*\n').  Often, block comments have been
+                     not so carefully hand formatted by the programmer, but
+                     reformatting that would just change the line breaks is
+                     not wanted.  In such cases, [1m-nfcb [22mshould be used.  Block
+                     comments are then handled like box comments.  The default
+                     is [1m-fcb[22m.
+
+     [1m-i[4m[22mn[24m             The number of spaces for one indentation level.  The
+                     default is 8.
+
+     [1m-ip[22m, [1m-nip       [22mEnables (disables) the indentation of parameter declara‐
+                     tions from the left margin.  The default is [1m-ip[22m.
+
+     [1m-l[4m[22mn[24m             Maximum length of an output line.  The default is 78.
+
+     [1m-ldi[4m[22mn[24m           Specifies the indentation, in character positions, of
+                     local variable names relative to the beginning of their
+                     type declaration.  The default is for local variable
+                     names to be indented by the same amount as global ones.
+
+     [1m-lp[22m, [1m-nlp       [22mLines-up code surrounded by parenthesis in continuation
+                     lines.  If a line has a left paren which is not closed on
+                     that line, then continuation lines will be lined up to
+                     start at the character position just after the left
+                     paren.  For example, here is how a piece of continued
+                     code looks with [1m-nlp [22min effect:
+
+                           p1 = first_procedure(second_procedure(p2, p3),
+                             third_procedure(p4, p5));
+
+                     With [1m-lp [22min effect (the default) the code looks somewhat
+                     clearer:
+
+                           p1 = first_procedure(second_procedure(p2, p3),
+                                                third_procedure(p4, p5));
+
+                     Inserting two more newlines we get:
+
+                           p1 = first_procedure(second_procedure(p2,
+                                                                 p3),
+                                                third_procedure(p4,
+                                                                p5));
+
+     [1m-npro           [22mCauses the profile files, ‘[4m./.indent.pro[24m’ and
+                     ‘[4m~/.indent.pro[24m’, to be ignored.
+
+     [1m-pcs[22m, [1m-npcs     [22mIf true ([1m-pcs[22m) all procedure calls will have a space
+                     inserted between the name and the `('.  The default is
+                     [1m-npcs[22m.
+
+     [1m-psl[22m, [1m-npsl     [22mIf true ([1m-psl[22m) the names of procedures being defined are
+                     placed in column 1 - their types, if any, will be left on
+                     the previous lines.  The default is [1m-psl[22m.
+
+     [1m-sc[22m, [1m-nsc       [22mEnables (disables) the placement of asterisks (`*'s) at
+                     the left edge of all comments.  The default is [1m-sc[22m.
+
+     [1m-sob[22m, [1m-nsob     [22mIf [1m-sob [22mis specified, indent will swallow optional blank
+                     lines.  You can use this to get rid of blank lines after
+                     declarations.  Default: [1m-nsob[22m.
+
+     [1m-st             [22mCauses [1mindent [22mto take its input from stdin and put its
+                     output to stdout.
+
+     [1m-ta             [22mAutomatically add all identifiers ending in "_t" to the
+                     list of type keywords.
+
+     [1m-T[4m[22mtypename[24m      Adds [4mtypename[24m to the list of type keywords.  Names accu‐
+                     mulate: [1m-T [22mcan be specified more than once.  You need to
+                     specify all the typenames that appear in your program
+                     that are defined by [1mtypedef [22m- nothing will be harmed if
+                     you miss a few, but the program will not be formatted as
+                     nicely as it should.  This sounds like a painful thing to
+                     have to do, but it is really a symptom of a problem in C:
+                     [1mtypedef [22mcauses a syntactic change in the language and
+                     [1mindent [22mcannot find all instances of [1mtypedef[22m.
+
+     [1m-troff          [22mCauses [1mindent [22mto format the program for processing by
+                     troff(1).  It will produce a fancy listing in much the
+                     same spirit as vgrind(1).  If the output file is not
+                     specified, the default is standard output, rather than
+                     formatting in place.
+
+     [1m-ut[22m, [1m-nut       [22mEnables (disables) the use of tab characters in the out‐
+                     put.  Tabs are assumed to be aligned on columns divisible
+                     by 8.  The default is [1m-ut[22m.
+
+     [1m-v[22m, [1m-nv         -v [22mturns on `verbose' mode; [1m-nv [22mturns it off.  When in
+                     verbose mode, [1mindent [22mreports when it splits one line of
+                     input into two or more lines of output, and gives some
+                     size statistics at completion.  The default is [1m-nv[22m.
+
+     You may set up your own `profile' of defaults to [1mindent [22mby creating a
+     file called [4m.indent.pro[24m in your login directory and/or the current direc‐
+     tory and including whatever switches you like.  A `.indent.pro' in the
+     current directory takes precedence over the one in your login directory.
+     If [1mindent [22mis run and a profile file exists, then it is read to set up the
+     program's defaults.  Switches on the command line, though, always over‐
+     ride profile switches.  The switches should be separated by spaces, tabs
+     or newlines.
+
+   [1mComments[0m
+     ‘[4mBox[24m’ [4mcomments[24m.  The [1mindent [22mutility assumes that any comment with a dash
+     or star immediately after the start of comment (that is, `/*-' or `/**')
+     is a comment surrounded by a box of stars.  Each line of such a comment
+     is left unchanged, except that its indentation may be adjusted to account
+     for the change in indentation of the first line of the comment.
+
+     [4mStraight[24m [4mtext[24m.  All other comments are treated as straight text.  The
+     [1mindent [22mutility fits as many words (separated by blanks, tabs, or new‐
+     lines) on a line as possible.  Blank lines break paragraphs.
+
+   [1mComment indentation[0m
+     If a comment is on a line with code it is started in the `comment col‐
+     umn', which is set by the [1m-c[4m[22mn[24m command line parameter.  Otherwise, the
+     comment is started at [4mn[24m indentation levels less than where code is cur‐
+     rently being placed, where [4mn[24m is specified by the [1m-d[4m[22mn[24m command line parame‐
+     ter.  If the code on a line extends past the comment column, the comment
+     starts further to the right, and the right margin may be automatically
+     extended in extreme cases.
+
+   [1mPreprocessor lines[0m
+     In general, [1mindent [22mleaves preprocessor lines alone.  The only reformat‐
+     ting that it will do is to straighten up trailing comments.  It leaves
+     embedded comments alone.  Conditional compilation ([1m#ifdef...#endif[22m) is
+     recognized and [1mindent [22mattempts to correctly compensate for the syntactic
+     peculiarities introduced.
+
+   [1mC syntax[0m
+     The [1mindent [22mutility understands a substantial amount about the syntax of
+     C, but it has a `forgiving' parser.  It attempts to cope with the usual
+     sorts of incomplete and malformed syntax.  In particular, the use of
+     macros like:
+
+           #define forever for(;;)
+
+     is handled properly.
+
+[1mENVIRONMENT[0m
+     The [1mindent [22mutility uses the HOME environment variable.
+
+[1mFILES[0m
+     ./.indent.pro  profile file
+     ~/.indent.pro  profile file
+
+[1mHISTORY[0m
+     The [1mindent [22mcommand appeared in 4.2BSD.
+
+[1mBUGS[0m
+     The [1mindent [22mutility has even more switches than ls(1).
+
+     A common mistake is to try to indent all the [4mC[24m programs in a directory by
+     typing:
+
+           indent *.c
+
+     This is probably a bug, not a feature.
+
+BSD                              March 3, 2012                             BSD

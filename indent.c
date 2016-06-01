@@ -274,7 +274,7 @@ main(int argc, char **argv)
 	    if (*p == ' ')
 		col++;
 	    else if (*p == '\t')
-		col = ((col - 1) & ~7) + 9;
+		col = tabsize * (1 + (col - 1) / tabsize) + 1;
 	    else
 		break;
 	    p++;
@@ -1214,24 +1214,17 @@ indent_declaration(int cur_dec_ind, int tabs_to_var)
     int pos = e_code - s_code;
     char *startpos = e_code;
 
-    /*
-     * get the tab math right for indentations that are not multiples of 8
-     */
-    if ((ps.ind_level * ps.ind_size) % 8 != 0) {
-	pos += (ps.ind_level * ps.ind_size) % 8;
-	cur_dec_ind += (ps.ind_level * ps.ind_size) % 8;
-    }
     if (tabs_to_var) {
-	while ((pos & ~7) + 8 <= cur_dec_ind) {
+	int tpos;
+	while ((tpos = tabsize * (1 + pos / tabsize)) <= cur_dec_ind) {
 	    CHECK_SIZE_CODE;
 	    *e_code++ = '\t';
-	    pos = (pos & ~7) + 8;
+	    pos = tpos;
 	}
     }
-    while (pos < cur_dec_ind) {
+    while (pos++ < cur_dec_ind) {
 	CHECK_SIZE_CODE;
 	*e_code++ = ' ';
-	pos++;
     }
     if (e_code == startpos && ps.want_blank) {
 	*e_code++ = ' ';

@@ -229,7 +229,7 @@ dump_line(void)
 		    if (*com_st == ' ')
 			target++, com_st++;
 		    else if (*com_st == '\t')
-			target = ((target - 1) & ~7) + 9, com_st++;
+			target = tabsize * (1 + (target - 1) / tabsize) + 1, com_st++;
 		    else
 			target = 1;
 		if (cur_col > target) {	/* if comment can't fit on this line,
@@ -464,7 +464,6 @@ pad_output(int current, int target)
     /* target: position we want it at */
 {
     int curr;		/* internal column pointer */
-    int tcur;
 
     if (troff)
 	fprintf(output, "\\h'|%dp'", (target - 1) * 7);
@@ -473,12 +472,13 @@ pad_output(int current, int target)
 	    return (current);	/* line is already long enough */
 	curr = current;
         if (use_tabs) {
-            while ((tcur = ((curr - 1) & tabmask) + tabsize + 1) <= target) {
-                putc('\t', output);
-                curr = tcur;
-            }
-        }
-        while (curr++ < target)
+	    int tcur;
+	    while ((tcur = tabsize * (1 + (curr - 1) / tabsize) + 1) <= target) {
+		putc('\t', output);
+		curr = tcur;
+	    }
+	}
+	while (curr++ < target)
 	    putc(' ', output);	/* pad with final blanks */
     }
     return (target);
@@ -525,7 +525,7 @@ count_spaces(int current, char *buffer)
 	    break;
 
 	case '\t':
-	    cur = ((cur - 1) & tabmask) + tabsize + 1;
+	    cur = tabsize * (1 + (cur - 1) / tabsize) + 1;
 	    break;
 
 	case 010:		/* backspace */

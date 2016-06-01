@@ -151,7 +151,7 @@ pr_comment(void)
 	    }
 	    ps.com_col = ps.decl_on_line || ps.ind_level == 0 ? ps.decl_com_ind : ps.com_ind;
 	    if (ps.com_col < target_col)
-		ps.com_col = ((target_col + 7) & ~7) + 1;
+		ps.com_col = tabsize * (1 + (target_col - 1) / tabsize) + 1;
 	    if (ps.com_col + 24 > adj_max_col)
 		adj_max_col = ps.com_col + 24;
 	}
@@ -378,7 +378,7 @@ pr_comment(void)
 		fill_buffer();
 
 	    if (*e_com == '\t')	/* keep track of column */
-		now_col = ((now_col - 1) & tabmask) + tabsize + 1;
+		now_col = tabsize * (1 + (now_col - 1) / tabsize) + 1;
 	    else if (*e_com == '\b')	/* this is a backspace */
 		--now_col;
 	    else

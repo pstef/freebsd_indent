@@ -42,11 +42,6 @@
 #define label_offset 2		/* number of levels a label is placed to left
 				 * of code */
 
-#define tabsize 8		/* the size of a tab */
-#define tabmask 0177770		/* mask used when figuring length of lines
-				 * with tabs */
-
-
 #define false 0
 #define true  1
 
@@ -206,6 +201,7 @@ int	    use_tabs;			/* set true to use tabs for spacing,
 					 * false uses all spaces */
 int	    auto_typedefs;		/* set true to recognize identifiers
 					 * ending in "_t" like typedefs */
+int	    tabsize;			/* the size of a tab */
 
 /* -troff font state information */
 

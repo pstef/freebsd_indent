@@ -43,6 +43,7 @@ static char sccsid[] = "@(#)parse.c	8.1 (Berkeley) 6/6/93";
 __FBSDID("$FreeBSD: head/usr.bin/indent/parse.c 116390 2003-06-15 09:28:17Z charnier $");
 
 #include <stdio.h>
+#include <err.h>
 #include "indent_globs.h"
 #include "indent_codes.h"
 #include "indent.h"
@@ -199,6 +200,10 @@ parse(int tk) /* tk: the code for the construct scanned */
 
 
     }				/* end of switch */
+
+    if (ps.tos >= STACKSIZE) {
+	errx(1, "parser stack overflow");
+    }
 
     reduce();			/* see if any reduction can be done */
 

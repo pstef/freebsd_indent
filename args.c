@@ -74,7 +74,11 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/args.c 205989 2010-03-31 17:05:30Z avg $
 
 static void scan_profile(FILE *);
 
+#define	KEY_FILE		5	/* only used for args */
+
 const char *option_source = "?";
+
+void add_typedefs_from_file(const char *str);
 
 /*
  * N.B.: because of the way the table here is scanned, options whose names are
@@ -91,6 +95,7 @@ struct pro {
 }           pro[] = {
 
     {"T", PRO_SPECIAL, 0, KEY, 0},
+    {"U", PRO_SPECIAL, 0, KEY_FILE, 0},
     {"bacc", PRO_BOOL, false, ON, &blanklines_around_conditional_compilation},
     {"badp", PRO_BOOL, false, ON, &blanklines_after_declarations_at_proctop},
     {"bad", PRO_BOOL, false, ON, &blanklines_after_declarations},
@@ -299,6 +304,12 @@ found:
 	    }
 	    break;
 
+	case KEY_FILE:
+	    if (*param_start == 0)
+		goto need_param;
+	    add_typedefs_from_file(param_start);
+	    break;
+
 	default:
 	    errx(1, "set_option: internal error: p_special %d", p->p_special);
 	}
@@ -326,4 +337,23 @@ found:
     default:
 	errx(1, "set_option: internal error: p_type %d", p->p_type);
     }
+}
+
+
+void
+add_typedefs_from_file(const char *str)
+{
+    FILE *file;
+    char line[BUFSIZ];
+
+    if ((file = fopen(param_start, "r")) == NULL) {
+	fprintf(stderr, "indent: cannot open file %s\n", str);
+	exit(1);
+    }
+    while ((fgets(line, BUFSIZ, file)) != NULL) {
+	/* Remove trailing whitespace */
+	*(line + strcspn(line, " \t\n\r")) = '\0';
+	addkey(strdup(line), 4);
+    }
+    fclose(file);
 }

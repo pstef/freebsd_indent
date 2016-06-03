@@ -232,7 +232,7 @@ struct fstate
             bodyf;		/* major body font */
 
 
-#define STACKSIZE 150
+#define STACKSIZE 1000
 
 struct parser_state {
     int         last_token;

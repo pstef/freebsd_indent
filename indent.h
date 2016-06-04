@@ -28,7 +28,8 @@
 __FBSDID("$FreeBSD: head/usr.bin/indent/indent.h 93440 2002-03-30 17:10:20Z dwmalone $");
 #endif
 
-void	addkey(char *, int);
+void	add_typename(const char *);
+void	alloc_typenames(void);
 int	compute_code_target(void);
 int	compute_label_target(void);
 int	count_spaces(int, char *);

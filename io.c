@@ -370,7 +370,7 @@ fill_buffer(void)
     }
     buf_ptr = in_buffer;
     buf_end = p;
-    if (p[-2] == '/' && p[-3] == '*') {
+    if (p - in_buffer > 2 && p[-2] == '/' && p[-3] == '*') {
 	if (in_buffer[3] == 'I' && strncmp(in_buffer, "/**INDENT**", 11) == 0)
 	    fill_buffer();	/* flush indent error message */
 	else {

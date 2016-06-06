@@ -276,7 +276,8 @@ inhibit_newline:
     *(e_com = s_com = combuf + 1) = '\0';
     ps.ind_level = ps.i_l_follow;
     ps.paren_level = ps.p_l_follow;
-    paren_target = -ps.paren_indents[ps.paren_level - 1];
+    if (ps.paren_level > 0)
+	paren_target = -ps.paren_indents[ps.paren_level - 1];
     not_first_line = 1;
 }
 

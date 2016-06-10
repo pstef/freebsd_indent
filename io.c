@@ -247,7 +247,7 @@ dump_line(void)
 			if (com_st[1] == ' ' && com_st[0] == ' ' && e_com > com_st + 1)
 			    com_st[1] = '*';
 			else
-			    fwrite(" * ", com_st[0] == '\t' ? 2 : com_st[0] == '*' ? 1 : 3, 1, output);
+			    fwrite(" * ", isspace((unsigned int) com_st[0]) ? 2 : com_st[0] == '*' ? 1 : 3, 1, output);
 		    }
 		}
 		fwrite(com_st, e_com - com_st, 1, output);

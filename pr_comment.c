@@ -45,6 +45,7 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/pr_comment.c 116390 2003-06-15 09:28:17Z
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "indent_globs.h"
 #include "indent.h"
 /*
@@ -89,10 +90,6 @@ pr_comment(void)
     char       *t_ptr;		/* used for moving string */
     int         break_delim = comment_delimiter_on_blankline;
     int         l_just_saw_decl = ps.just_saw_decl;
-    /*
-     * int         ps.last_nl = 0;	 true iff the last significant thing
-     * weve seen is a newline
-     */
     int         one_liner = 1;	/* true iff this comment is a one-liner */
     adj_max_col = max_col;
     ps.just_saw_decl = 0;
@@ -167,21 +164,13 @@ pr_comment(void)
 
     *e_com = '\0';
     if (troff) {
-	now_col = 1;
 	adj_max_col = 80;
     }
-    else
-	now_col = count_spaces(ps.com_col, s_com);	/* figure what column we
-							 * would be in if we
-							 * printed the comment
-							 * now */
 
     /* Start to copy the comment */
 
     while (1) {			/* this loop will go until the comment is
 				 * copied */
-	if (*buf_ptr > 040 && *buf_ptr != '*')
-	    ps.last_nl = 0;
 	CHECK_SIZE_COM;
 	switch (*buf_ptr) {	/* this checks for various spcl cases */
 	case 014:		/* check for a form feed */
@@ -236,7 +225,6 @@ pr_comment(void)
 		    *e_com++ = ' ';
 		}
 		dump_line();
-		now_col = ps.com_col;
 	    }
 	    else {
 		ps.last_nl = 1;
@@ -250,7 +238,6 @@ pr_comment(void)
 		    last_bl = e_com;
 		    CHECK_SIZE_COM;
 		    *e_com++ = ' ';
-		    ++now_col;
 		}
 	    }
 	    ++line_no;		/* keep track of input line number */
@@ -285,7 +272,6 @@ pr_comment(void)
 		if (*(e_com - 1) != ' ' && !ps.box_com) {	/* insure blank before
 								 * end */
 		    *e_com++ = ' ';
-		    ++now_col;
 		}
 		if (break_delim == 1 && !one_liner && s_com[0] == '/'
 			&& s_com[1] == '*' && s_com[2] == ' ') {
@@ -299,11 +285,9 @@ pr_comment(void)
 		    e_com = t;
 		    s_com[0] = s_com[1] = s_com[2] = ' ';
 		}
-		if (break_delim == 2 && e_com > s_com + 3
-			 /* now_col > adj_max_col - 2 && !ps.box_com */ ) {
+		if (break_delim == 2 && e_com > s_com + 3) {
 		    *e_com = '\0';
 		    dump_line();
-		    now_col = ps.com_col;
 		}
 		CHECK_SIZE_COM;
 		*e_com++ = '*';
@@ -314,26 +298,20 @@ pr_comment(void)
 	    }
 	    else {		/* handle isolated '*' */
 		*e_com++ = '*';
-		++now_col;
 	    }
 	    break;
 	default:		/* we have a random char */
-	    *e_com = *buf_ptr++;
-	    if (buf_ptr >= buf_end)
-		fill_buffer();
-
-	    if (*e_com == '\t')	/* keep track of column */
-		now_col = ((now_col - 1) & tabmask) + tabsize + 1;
-	    else if (*e_com == '\b')	/* this is a backspace */
-		--now_col;
-	    else
-		++now_col;
-
-	    if (*e_com == ' ' || *e_com == '\t')
-		last_bl = e_com;
-	    /* remember we saw a blank */
-
-	    ++e_com;
+	    now_col = count_spaces_until(ps.com_col, s_com, e_com);
+	    do {
+		*e_com = *buf_ptr++;
+		if (buf_ptr >= buf_end)
+		    fill_buffer();
+		if (*e_com == ' ' || *e_com == '\t')
+		    last_bl = e_com;	/* remember we saw a blank */
+		++e_com;
+		now_col++;
+	    } while (!memchr("*\n\r\b\t", *buf_ptr, 6) && now_col <= adj_max_col);
+	    ps.last_nl = false;
 	    if (now_col > adj_max_col && !ps.box_com && e_com[-1] > ' ') {
 		/*
 		 * the comment is too long, it must be broken up
@@ -378,8 +356,6 @@ pr_comment(void)
 		    }
 		}
 		*e_com = '\0';
-		now_col = count_spaces(ps.com_col, s_com);	/* recompute current
-								 * position */
 	    }
 	    break;
 	}

@@ -90,7 +90,6 @@ pr_comment(void)
     char       *t_ptr;		/* used for moving string */
     int         break_delim = comment_delimiter_on_blankline;
     int         l_just_saw_decl = ps.just_saw_decl;
-    int         one_liner = 1;	/* true iff this comment is a one-liner */
     adj_max_col = max_col;
     ps.just_saw_decl = 0;
     last_bl = 0;		/* no blanks found so far */
@@ -104,6 +103,7 @@ pr_comment(void)
     if (ps.col_1 && !format_col1_comments) {	/* if comment starts in column
 						 * 1 it should not be touched */
 	ps.box_com = true;
+	break_delim = false;
 	ps.com_col = 1;
     }
     else {
@@ -116,7 +116,7 @@ pr_comment(void)
 				 * be a block comment and is treated as a
 				 * box comment unless format_block_comments
 				 * is nonzero (the default). */
-	    break_delim = 0;
+	    break_delim = false;
 	}
 	if ( /* ps.bl_line && */ (s_lab == e_lab) && (s_code == e_code)) {
 	    /* klg: check only if this line is blank */
@@ -131,7 +131,7 @@ pr_comment(void)
 	}
 	else {
 	    int target_col;
-	    break_delim = 0;
+	    break_delim = false;
 	    if (s_code != e_code)
 		target_col = count_spaces(compute_code_target(), s_code);
 	    else {
@@ -161,6 +161,27 @@ pr_comment(void)
     *e_com++ = '*';
     if (*buf_ptr != ' ' && !ps.box_com)
 	*e_com++ = ' ';
+
+    /* Don't put a break delimiter if this comment is a one-liner */
+    for (t_ptr = buf_ptr; *t_ptr != '\0' && *t_ptr != '\n'; t_ptr++) {
+	if (t_ptr >= buf_end)
+	    fill_buffer();
+	if (t_ptr[0] == '*' && t_ptr[1] == '/') {
+	    break_delim = false;
+	    break;
+	}
+    }
+
+    if (break_delim) {
+	char       *t = e_com;
+	e_com = s_com + 2;
+	*e_com = 0;
+	if (blanklines_before_blockcomments)
+	    prefix_blankline_requested = 1;
+	dump_line();
+	e_com = t;
+	s_com[0] = s_com[1] = s_com[2] = ' ';
+    }
 
     *e_com = '\0';
     if (troff) {
@@ -198,7 +219,6 @@ pr_comment(void)
 		dump_line();
 		return;
 	    }
-	    one_liner = 0;
 	    if (ps.box_com || ps.last_nl) {	/* if this is a boxed comment,
 						 * we dont ignore the newline */
 		if (s_com == e_com) {
@@ -207,18 +227,6 @@ pr_comment(void)
 		}
 		*e_com = '\0';
 		if (!ps.box_com && e_com - s_com > 3) {
-		    if (break_delim == 1 && s_com[0] == '/'
-			    && s_com[1] == '*' && s_com[2] == ' ') {
-			char       *t = e_com;
-			break_delim = 2;
-			e_com = s_com + 2;
-			*e_com = 0;
-			if (blanklines_before_blockcomments)
-			    prefix_blankline_requested = 1;
-			dump_line();
-			e_com = t;
-			s_com[0] = s_com[1] = s_com[2] = ' ';
-		    }
 		    dump_line();
 		    CHECK_SIZE_COM;
 		    *e_com++ = ' ';
@@ -268,26 +276,15 @@ pr_comment(void)
 	end_of_comment:
 		if (++buf_ptr >= buf_end)
 		    fill_buffer();
-
-		if (*(e_com - 1) != ' ' && !ps.box_com) {	/* insure blank before
-								 * end */
+		/* ensure blank before end */
+		if (e_com[-1] != ' ' && !ps.box_com) {
 		    *e_com++ = ' ';
 		}
-		if (break_delim == 1 && !one_liner && s_com[0] == '/'
-			&& s_com[1] == '*' && s_com[2] == ' ') {
-		    char       *t = e_com;
-		    break_delim = 2;
-		    e_com = s_com + 2;
-		    *e_com = 0;
-		    if (blanklines_before_blockcomments)
-			prefix_blankline_requested = 1;
-		    dump_line();
-		    e_com = t;
-		    s_com[0] = s_com[1] = s_com[2] = ' ';
-		}
-		if (break_delim == 2 && e_com > s_com + 3) {
-		    *e_com = '\0';
-		    dump_line();
+		if (break_delim) {
+		    if (e_com > s_com + 3) {
+			*e_com = '\0';
+			dump_line();
+		    }
 		}
 		CHECK_SIZE_COM;
 		*e_com++ = '*';
@@ -316,18 +313,6 @@ pr_comment(void)
 		/*
 		 * the comment is too long, it must be broken up
 		 */
-		if (break_delim == 1 && s_com[0] == '/'
-			&& s_com[1] == '*' && s_com[2] == ' ') {
-		    char       *t = e_com;
-		    break_delim = 2;
-		    e_com = s_com + 2;
-		    *e_com = 0;
-		    if (blanklines_before_blockcomments)
-			prefix_blankline_requested = 1;
-		    dump_line();
-		    e_com = t;
-		    s_com[0] = s_com[1] = s_com[2] = ' ';
-		}
 		if (last_bl == 0) {	/* we have seen no blanks */
 		    last_bl = e_com;	/* fake it */
 		    *e_com++ = ' ';

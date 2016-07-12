@@ -59,7 +59,7 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/indent.c 228992 2011-12-30 11:02:40Z uqs
 #include <string.h>
 #include <ctype.h>
 #include "indent_globs.h"
-#include "indent_codes.h"
+#include "lexi.h"
 #include "indent.h"
 
 static void bakcopy(void);
@@ -92,7 +92,7 @@ main(int argc, char **argv)
 				 * construct */
     const char *t_ptr;		/* used for copying tokens */
     int		tabs_to_var;	/* true if using tabs to indent to var name */
-    int         type_code;	/* the type of token, returned by lexi */
+    enum indent_code type_code;	/* the type of token, returned by lexi */
 
     int         last_else = 0;	/* true iff last keyword was an else */
 
@@ -422,7 +422,7 @@ main(int argc, char **argv)
 		sc_end = 0;
 		break;
 	    }			/* end of switch */
-	    if (type_code != 0)	/* we must make this check, just in case there
+	    if (type_code != eof)	/* we must make this check, just in case there
 				 * was an unexpected EOF */
 		type_code = lexi();	/* read another token */
 	    /* if (ps.search_brace) ps.procname[0] = 0; */
@@ -433,7 +433,7 @@ main(int argc, char **argv)
 	}			/* end of while (search_brace) */
 	last_else = 0;
 check_type:
-	if (type_code == 0) {	/* we got eof */
+	if (type_code == eof) {	/* we got eof */
 	    if (s_lab != e_lab || s_code != e_code
 		    || s_com != e_com)	/* must dump end of line */
 		dump_line();
@@ -1164,6 +1164,7 @@ check_type:
 	    }
 	    pr_comment();
 	    break;
+
 	}			/* end of big switch stmt */
 
 	*e_code = '\0';		/* make sure code section is null terminated */

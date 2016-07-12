@@ -53,7 +53,7 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/lexi.c 206687 2010-04-15 21:41:07Z avg $
 #include <stdlib.h>
 #include <string.h>
 #include "indent_globs.h"
-#include "indent_codes.h"
+#include "lexi.h"
 #include "indent.h"
 
 #define alphanum 1
@@ -137,14 +137,14 @@ strcmp_type(const void *e1, const void *e2)
     return strcmp(e1, *(const char * const *) e2);
 }
 
-int
+enum indent_code
 lexi(void)
 {
     int         unary_delim;	/* this is set to 1 if the current token
 				 * forces a following operator to be unary */
-    static int  last_code;	/* the last token type returned */
+    static enum indent_code last_code; /* the last token type returned */
     static int  l_struct;	/* set to 1 if the last token was 'struct' */
-    int         code;		/* internal code to be returned */
+    enum indent_code code;	/* internal code to be returned */
     char        qchar;		/* the delimiter character for a string */
 
     e_token = s_token;		/* point to start of place to save token */
@@ -365,7 +365,7 @@ lexi(void)
     case '\n':
 	unary_delim = ps.last_u_d;
 	ps.last_nl = true;	/* remember that we just had a newline */
-	code = (had_eof ? 0 : newline);
+	code = (had_eof ? eof : newline);
 
 	/*
 	 * if data has been exhausted, the newline is a dummy, and we should

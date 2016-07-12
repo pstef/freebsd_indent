@@ -45,7 +45,7 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/parse.c 116390 2003-06-15 09:28:17Z char
 #include <stdio.h>
 #include <err.h>
 #include "indent_globs.h"
-#include "indent_codes.h"
+#include "lexi.h"
 #include "indent.h"
 
 static void reduce(void);

@@ -322,7 +322,7 @@ lexi(void)
 	    while (tp < buf_end)
 		if (*tp++ == ')' && (*tp == ';' || *tp == ','))
 		    goto not_proc;
-	    strncpy(ps.procname, token, sizeof ps.procname - 1);
+	    strncpy(ps.procname, token, sizeof(ps.procname) - 1);
 	    ps.in_parameter_declaration = 1;
 	    rparen_count = 1;
     not_proc:;

@@ -305,7 +305,7 @@ compute_code_target(void)
 	}
     else if (ps.ind_stmt)
 	target_col += continuation_indent;
-    return target_col;
+    return (target_col);
 }
 
 int
@@ -621,7 +621,7 @@ chfont(struct fstate *of, struct fstate *nf, char *s)
 	    *s++ = '0' + nf->size - of->size;
 	}
     }
-    return s;
+    return (s);
 }
 
 void

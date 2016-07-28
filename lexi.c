@@ -341,7 +341,7 @@ lexi(void)
 	    ps.keyword = 4;	/* a type name */
 	    ps.last_u_d = true;
 	    last_code = decl;
-	    return decl;
+	    return (decl);
 	}
 	if (last_code == decl)	/* if this is a declared variable, then
 				 * following sign is unary */

@@ -28,6 +28,8 @@
 __FBSDID("$FreeBSD: head/usr.bin/indent/indent.h 303746 2016-08-04 15:27:09Z pfg $");
 #endif
 
+#define nitems(array) (sizeof (array) / sizeof (array[0]))
+
 void	add_typename(const char *);
 void	alloc_typenames(void);
 int	compute_code_target(void);

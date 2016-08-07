@@ -100,6 +100,7 @@ parse(int tk) /* tk: the code for the construct scanned */
 	     * in case of a long "if-else-if ... else-if" sequence.
 	     */
 	    ps.i_l_follow = ps.il[ps.tos--];
+	/* the rest is the same as for dolit and forstmt */
     case dolit:		/* 'do' */
     case forstmt:		/* for (...) */
 	ps.p_stack[++ps.tos] = tk;
@@ -306,8 +307,9 @@ reduce(void)
 	    case swstmt:
 		/* <switch> <stmt> */
 		case_ind = ps.cstk[ps.tos - 1];
-
-	    case decl:		/* finish of a declaration */
+		/* FALLTHROUGH */
+	    case decl:
+		/* finish off a declaration */
 	    case elsehead:
 		/* <<if> <stmt> else> <stmt> */
 	    case forstmt:

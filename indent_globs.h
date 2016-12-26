@@ -210,6 +210,9 @@ int	    auto_typedefs;		/* set true to recognize identifiers
 					 * ending in "_t" like typedefs */
 int	    space_after_cast;		/* "b = (int) a" vs "b = (int)a" */
 int	    tabsize;			/* the size of a tab */
+int	    else_endif_com_ind;		/* the column in which comments to
+					 * the right of #else and #endif
+					 * should start */
 
 /* -troff font state information */
 

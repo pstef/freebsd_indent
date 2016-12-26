@@ -53,6 +53,7 @@
 .Op Fl \&br
 .Op Fl bs | Fl nbs
 .Op Fl c Ns Ar n
+.Op Fl cp Ns Ar n
 .Op Fl \&cd Ns Ar n
 .Bk -words
 .Op Fl cdb | Fl ncdb
@@ -200,6 +201,10 @@ The default is
 .It Fl c Ns Ar n
 The column in which comments on code start.
 The default is 33.
+.It Fl cp Ns Ar n
+The column in which comments on #else and #endif start.
+The default is 0, which effectively separates the directives from comments by
+a single space.
 .It Fl cd Ns Ar n
 The column in which comments on declarations start.
 The default

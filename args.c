@@ -115,6 +115,7 @@ struct pro {
     {"ce", PRO_BOOL, true, ON, &cuddle_else},
     {"ci", PRO_INT, 0, 0, &continuation_indent},
     {"cli", PRO_SPECIAL, 0, CLI, 0},
+    {"cp", PRO_INT, 0, 0, &else_endif_com_ind},
     {"c", PRO_INT, 33, 0, &ps.com_ind},
     {"di", PRO_INT, 16, 0, &ps.decl_indent},
     {"dj", PRO_BOOL, false, ON, &ps.ljust_decl},

@@ -140,7 +140,14 @@ pr_comment(void)
 		if (s_lab != e_lab)
 		    target_col = count_spaces(compute_label_target(), s_lab);
 	    }
-	    ps.com_col = ps.decl_on_line || ps.ind_level == 0 ? ps.decl_com_ind : ps.com_ind;
+	    if (s_lab != e_lab && s_lab[1] == 'e' &&
+		(strncmp(s_lab, "#endif", 6) == 0 ||
+		strncmp(s_lab, "#else", 5) == 0))
+		ps.com_col = else_endif_com_ind <= target_col
+		    ? target_col + 1 : else_endif_com_ind;
+	    else
+		ps.com_col = ps.decl_on_line || ps.ind_level == 0
+		    ? ps.decl_com_ind : ps.com_ind;
 	    if (ps.com_col <= target_col)
 		ps.com_col = tabsize * (1 + (target_col - 1) / tabsize) + 1;
 	    if (ps.com_col + 24 > adj_max_col)

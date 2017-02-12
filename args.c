@@ -215,7 +215,7 @@ scan_profile(FILE *f)
 	    } else if (i == '/' && comment && p > buf && p[-1] == '*') {
 		p = buf + comment - 1;
 		comment = 0;
-	    } else if (isspace(i)) {
+	    } else if (isspace((unsigned char)i)) {
 		if (p > buf && !comment)
 		    break;
 	    } else {
@@ -319,7 +319,7 @@ found:
 	break;
 
     case PRO_INT:
-	if (!isdigit(*param_start)) {
+	if (!isdigit((unsigned char)*param_start)) {
     need_param:
 	    errx(1, "%s: ``%s'' requires a parameter", option_source, p->p_name);
 	}

@@ -210,9 +210,9 @@ pr_comment(void)
 
     while (1) {			/* this loop will go until the comment is
 				 * copied */
-	CHECK_SIZE_COM;
 	switch (*buf_ptr) {	/* this checks for various spcl cases */
 	case 014:		/* check for a form feed */
+	    CHECK_SIZE_COM(3);
 	    if (!ps.box_com) {	/* in a text comment, break the line here */
 		ps.use_ff = true;
 		/* fix so dump_line uses a form feed */
@@ -237,6 +237,7 @@ pr_comment(void)
 		return;
 	    }
 	    last_bl = NULL;
+	    CHECK_SIZE_COM(4);
 	    if (ps.box_com || ps.last_nl) {	/* if this is a boxed comment,
 						 * we dont ignore the newline */
 		if (s_com == e_com)
@@ -260,7 +261,6 @@ pr_comment(void)
 		 */
 		else {		/* otherwise, insert one */
 		    last_bl = e_com;
-		    CHECK_SIZE_COM;
 		    *e_com++ = ' ';
 		}
 	    }
@@ -287,12 +287,11 @@ pr_comment(void)
 				 * of comment */
 	    if (++buf_ptr >= buf_end)	/* get to next char after * */
 		fill_buffer();
-
+	    CHECK_SIZE_COM(4);
 	    if (*buf_ptr == '/') {	/* it is the end!!! */
 	end_of_comment:
 		if (++buf_ptr >= buf_end)
 		    fill_buffer();
-		CHECK_SIZE_COM;
 		if (break_delim) {
 		    if (e_com > s_com + 3) {
 			dump_line();
@@ -313,6 +312,7 @@ pr_comment(void)
 	default:		/* we have a random char */
 	    now_col = count_spaces_until(ps.com_col, s_com, e_com);
 	    do {
+		CHECK_SIZE_COM(1);
 		*e_com = *buf_ptr++;
 		if (buf_ptr >= buf_end)
 		    fill_buffer();
@@ -341,12 +341,19 @@ pr_comment(void)
 		for (t_ptr = last_bl + 1; *t_ptr == ' ' || *t_ptr == '\t';
 		    t_ptr++)
 			;
-		last_bl = NULL;
-		while (*t_ptr != '\0') {
-		    if (*t_ptr == ' ' || *t_ptr == '\t')
-			last_bl = e_com;
-		    *e_com++ = *t_ptr++;
- 		}
+		{
+		    int len = strlen(t_ptr);
+
+		    CHECK_SIZE_COM(len);
+		    memmove(e_com, t_ptr, len);
+		    last_bl = NULL;
+		    for (t_ptr = e_com + len - 1; t_ptr > e_com; t_ptr--)
+			if (*t_ptr == ' ' || *t_ptr == '\t') {
+			    last_bl = t_ptr;
+			    break;
+			}
+		    e_com += len;
+		}
 	    }
 	    break;
 	}

@@ -216,29 +216,10 @@ int	    auto_typedefs;		/* set true to recognize identifiers
 int	    space_after_cast;		/* "b = (int) a" vs "b = (int)a" */
 int	    tabsize;			/* the size of a tab */
 
-/* -troff font state information */
-
-struct fstate {
-    char        font[4];
-    char        size;
-    int         allcaps:1;
-};
-char       *chfont(struct fstate *, struct fstate *, char *);
-
-struct fstate
-            keywordf,		/* keyword font */
-            stringf,		/* string font */
-            boxcomf,		/* Box comment font */
-            blkcomf,		/* Block comment font */
-            scomf,		/* Same line comment font */
-            bodyf;		/* major body font */
-
-
 #define	STACKSIZE 256
 
 struct parser_state {
     int         last_token;
-    struct fstate cfont;	/* Current font */
     int         p_stack[STACKSIZE];	/* this is the parsers stack */
     int         il[STACKSIZE];	/* this stack stores indentation levels */
     float       cstk[STACKSIZE];/* used to store case stmt indentation levels */

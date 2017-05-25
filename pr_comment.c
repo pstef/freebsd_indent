@@ -341,18 +341,16 @@ pr_comment(void)
 		for (t_ptr = last_bl + 1; *t_ptr == ' ' || *t_ptr == '\t';
 		    t_ptr++)
 			;
-		{
-		    int len = strlen(t_ptr);
-
-		    CHECK_SIZE_COM(len);
-		    memmove(e_com, t_ptr, len);
-		    last_bl = NULL;
-		    for (t_ptr = e_com + len - 1; t_ptr > e_com; t_ptr--)
-			if (*t_ptr == ' ' || *t_ptr == '\t') {
-			    last_bl = t_ptr;
-			    break;
-			}
-		    e_com += len;
+		last_bl = NULL;
+		/*
+		 * t_ptr will be somewhere between e_com (dump_line() reset)
+		 * and l_com. So it's safe to copy byte by byte from t_ptr
+		 * to e_com without any CHECK_SIZE_COM().
+		 */
+		while (*t_ptr != '\0') {
+		    if (*t_ptr == ' ' || *t_ptr == '\t')
+			last_bl = e_com;
+		    *e_com++ = *t_ptr++;
 		}
 	    }
 	    break;

@@ -360,8 +360,9 @@ lexi(struct parser_state *state)
 	 * typedefd
 	 */
 	else if (!state->p_l_follow && !state->block_init &&
-	    !state->in_stmt && !state->in_decl &&
-	    ((*buf_ptr == '*' && buf_ptr[1] != '=') || isalpha((unsigned char)*buf_ptr)) &&
+	    !state->in_stmt &&
+	    ((*buf_ptr == '*' && buf_ptr[1] != '=') ||
+		isalpha((unsigned char)*buf_ptr)) &&
 	    (state->last_token == semicolon || state->last_token == lbrace ||
 		state->last_token == rbrace)) {
 	    state->keyword = 4;	/* a type name */

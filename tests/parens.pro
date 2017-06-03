@@ -1,1 +1,1 @@
--ts4 -i4 -di12
+-ts4 -i4 -di12 -Tallocfunc

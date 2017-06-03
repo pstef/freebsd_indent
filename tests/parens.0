@@ -20,4 +20,7 @@ void similarity_dist(int m)
 		char	   *sql = strVal(list_nth(fdw_private,
 										  here));
 	}
+
+	rb->allocfunc(1);
+	rb2.allocfunc(7);
 }

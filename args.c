@@ -56,7 +56,7 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/args.c 304650 2016-08-23 01:40:45Z pfg $
 #include "indent_globs.h"
 #include "indent.h"
 
-#define INDENT_PG_VERSION	"1.3"
+#define INDENT_VERSION	"2.0"
 
 /* profile types */
 #define	PRO_SPECIAL	1	/* special case */
@@ -98,7 +98,7 @@ struct pro {
 
     {"T", PRO_SPECIAL, 0, KEY, 0},
     {"U", PRO_SPECIAL, 0, KEY_FILE, 0},
-    {"V", PRO_SPECIAL, 0, VERSION, 0},
+    {"-version", PRO_SPECIAL, 0, VERSION, 0},
     {"P", PRO_SPECIAL, 0, IGN, 0},
     {"bacc", PRO_BOOL, false, ON, &blanklines_around_conditional_compilation},
     {"badp", PRO_BOOL, false, ON, &blanklines_after_declarations_at_proctop},
@@ -304,7 +304,7 @@ found:
 	    break;
 
 	case VERSION:
-	    printf("pg_bsd_indent %s\n", INDENT_PG_VERSION);
+	    printf("FreeBSD indent %s\n", INDENT_VERSION);
 	    exit(0);
 
 	default:

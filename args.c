@@ -56,6 +56,8 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/args.c 304650 2016-08-23 01:40:45Z pfg $
 #include "indent_globs.h"
 #include "indent.h"
 
+#define INDENT_VERSION	"2.0"
+
 /* profile types */
 #define	PRO_SPECIAL	1	/* special case */
 #define	PRO_BOOL	2	/* boolean */
@@ -74,6 +76,7 @@ __FBSDID("$FreeBSD: head/usr.bin/indent/args.c 304650 2016-08-23 01:40:45Z pfg $
 static void scan_profile(FILE *);
 
 #define	KEY_FILE		5	/* only used for args */
+#define VERSION			6	/* only used for args */
 
 const char *option_source = "?";
 
@@ -95,6 +98,7 @@ struct pro {
 
     {"T", PRO_SPECIAL, 0, KEY, 0},
     {"U", PRO_SPECIAL, 0, KEY_FILE, 0},
+    {"-version", PRO_SPECIAL, 0, VERSION, 0},
     {"P", PRO_SPECIAL, 0, IGN, 0},
     {"bacc", PRO_BOOL, false, ON, &blanklines_around_conditional_compilation},
     {"badp", PRO_BOOL, false, ON, &blanklines_after_declarations_at_proctop},
@@ -299,6 +303,10 @@ found:
 		goto need_param;
 	    add_typedefs_from_file(param_start);
 	    break;
+
+	case VERSION:
+	    printf("FreeBSD indent %s\n", INDENT_VERSION);
+	    exit(0);
 
 	default:
 	    errx(1, "set_option: internal error: p_special %d", p->p_special);

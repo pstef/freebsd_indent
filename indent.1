@@ -85,6 +85,7 @@
 .Ek
 .Op Fl \&st
 .Op Fl \&ta
+.Op Fl ts Ns Ar n
 .Op Fl U Ns Ar file
 .Op Fl ut | Fl nut
 .Op Fl v | Fl \&nv
@@ -454,13 +455,15 @@ language and
 cannot find all
 instances of
 .Ic typedef .
+.It Fl ts Ns Ar n
+Assumed distance between tab stops.
+The default is 8.
 .It Fl U Ns Ar file
 Adds type names from
 .Ar file
 to the list of type keywords.
 .It Fl ut , nut
 Enables (disables) the use of tab characters in the output.
-Tabs are assumed to be aligned on columns divisible by 8.
 The default is
 .Fl ut .
 .It Fl v , \&nv

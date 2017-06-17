@@ -74,6 +74,7 @@
 .Op Fl \&lc Ns Ar n
 .Op Fl \&ldi Ns Ar n
 .Op Fl \&lp | Fl nlp
+.Op Fl \&lpl | Fl nlpl
 .Op Fl npro
 .Op Fl P Ns Ar file
 .Op Fl pcs | Fl npcs
@@ -387,6 +388,19 @@ p1\ =\ first_procedure(second_procedure(p2,
 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ third_procedure(p4,
 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p5));
 .Ed
+.It Fl \&lpl , nlpl
+With
+.Fl \&lpl ,
+code surrounded by parentheses in continuation lines is lined up even if it
+would extend past the right margin.
+With
+.Fl \&nlpl
+(the default), such a line that would extend past the right margin is moved
+left to keep it within the margin, if that does not require placing it to
+the left of the prevailing indentation level.
+These switches have no effect if
+.Fl nlp
+is selected.
 .It Fl npro
 Causes the profile files,
 .Sq Pa ./.indent.pro

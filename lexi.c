@@ -575,6 +575,17 @@ stop_lit:
 	    if (++buf_ptr >= buf_end)
 		fill_buffer();
 	}
+	if (ps.in_decl) {
+	    char *tp = buf_ptr;
+
+	    while (isalpha((unsigned char)*tp) ||
+		   isspace((unsigned char)*tp)) {
+		if (++tp >= buf_end)
+		    fill_buffer();
+	    }
+	    if (*tp == '(')
+		ps.procname[0] = ' ';
+	}
 	code = unary_op;
 	break;
 
